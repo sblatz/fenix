@@ -50,9 +50,10 @@ import org.mozilla.fenix.ext.urlToTrimmedHost
 import org.mozilla.fenix.mvi.ActionBusFactory
 import org.mozilla.fenix.mvi.getAutoDisposeObservable
 import org.mozilla.fenix.mvi.getManagedEmitter
+import org.mozilla.fenix.utils.Settings
 import kotlin.coroutines.CoroutineContext
 
-@SuppressWarnings("TooManyFunctions")
+@SuppressWarnings("TooManyFunctions", "LargeClass")
 class BookmarkFragment : Fragment(), CoroutineScope, BackHandler, AccountObserver {
 
     private lateinit var job: Job
@@ -363,6 +364,10 @@ class BookmarkFragment : Fragment(), CoroutineScope, BackHandler, AccountObserve
 
     override fun onLoggedOut() {
         getManagedEmitter<SignInChange>().onNext(SignInChange.SignedOut)
+    }
+
+    override fun onAuthenticationProblems() {
+        Settings.getInstance(context!!).setHasAuthenticationProblem(true)
     }
 
     override fun onProfileUpdated(profile: Profile) {
