@@ -9,6 +9,7 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -47,6 +48,7 @@ import mozilla.components.feature.session.ThumbnailsFeature
 import mozilla.components.feature.sitepermissions.SitePermissions
 import mozilla.components.feature.sitepermissions.SitePermissionsFeature
 import mozilla.components.feature.sitepermissions.SitePermissionsRules
+import mozilla.components.lib.crash.Crash
 import mozilla.components.support.base.feature.BackHandler
 import mozilla.components.support.base.feature.ViewBoundFeatureWrapper
 import mozilla.components.support.ktx.android.view.enterToImmersiveMode
@@ -57,6 +59,7 @@ import org.mozilla.fenix.DefaultThemeManager
 import org.mozilla.fenix.FenixViewModelProvider
 import org.mozilla.fenix.HomeActivity
 import org.mozilla.fenix.IntentReceiverActivity
+import org.mozilla.fenix.NavGraphDirections
 import org.mozilla.fenix.R
 import org.mozilla.fenix.collections.CreateCollectionViewModel
 import org.mozilla.fenix.collections.SaveCollectionStep
@@ -762,6 +765,18 @@ class BrowserFragment : Fragment(), BackHandler, CoroutineScope {
             override fun onUrlChanged(session: Session, url: String) {
                 super.onUrlChanged(session, url)
                 updateBookmarkState(session)
+            }
+
+            override fun onCrashStateChanged(session: Session, crashed: Boolean) {
+                super.onCrashStateChanged(session, crashed)
+
+                activity?.let {
+                    Log.d("Sawyer", "isCrash: " + Crash.isCrashIntent(it.intent))
+                    Crash.isCrashIntent(it.intent)
+                    val directions = NavGraphDirections.actionGlobalCrashReporter(it.intent)
+                    Navigation.findNavController(view!!).navigate(directions)
+                }
+
             }
         }
         getSessionById()?.register(observer, this)

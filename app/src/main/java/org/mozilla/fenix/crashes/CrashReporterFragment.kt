@@ -5,6 +5,7 @@
 package org.mozilla.fenix.crashes
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -30,8 +31,10 @@ class CrashReporterFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val crash = Crash.fromIntent(CrashReporterFragmentArgs.fromBundle(arguments!!).crashIntent)
+        Log.d("Sawyer", "arguments: $arguments")
+        //val crash = Crash.fromIntent(CrashReporterFragmentArgs.fromBundle(arguments!!).crashIntent)
 
+        //val crash = Crash()
         view.findViewById<TextView>(R.id.title).text =
             getString(R.string.tab_crash_title_2, context!!.getString(R.string.app_name))
 
@@ -40,11 +43,11 @@ class CrashReporterFragment : Fragment() {
         val selectedSession = requireComponents.core.sessionManager.selectedSession
 
         restore_tab_button.setOnClickListener {
-            selectedSession?.let { session -> closeFragment(true, session, crash) }
+           // selectedSession?.let { session -> closeFragment(true, session, crash) }
         }
 
         close_tab_button.setOnClickListener {
-            selectedSession?.let { session -> closeFragment(false, session, crash) }
+           // selectedSession?.let { session -> closeFragment(false, session, crash) }
         }
     }
 

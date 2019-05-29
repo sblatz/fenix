@@ -13,7 +13,8 @@
 
     <action
         android:id="@+id/action_global_crash_reporter"
-        app:destination="@id/crashReporterFragment" />
+        app:destination="@id/crashReporterFragment" >
+    </action>
 
     <fragment
         android:id="@+id/homeFragment"
@@ -142,6 +143,8 @@
         <action
             android:id="@+id/action_browserFragment_to_quickSettingsSheetDialogFragment"
             app:destination="@id/quickSettingsSheetDialogFragment" />
+        <action android:id="@+id/action_browserFragment_to_crashReporterFragment"
+                app:destination="@id/crashReporterFragment"/>
     </fragment>
 
     <fragment
@@ -370,6 +373,7 @@
         <argument
             android:name="crashIntent"
             app:argType="android.content.Intent" />
+
     </fragment>
     <fragment
         android:id="@+id/themeFragment"

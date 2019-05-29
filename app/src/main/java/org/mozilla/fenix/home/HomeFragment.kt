@@ -86,6 +86,8 @@ class HomeFragment : Fragment(), CoroutineScope, AccountObserver {
             super.onTitleChanged(session, title)
             emitSessionChanges()
         }
+
+
     }
 
     private var homeMenu: HomeMenu? = null

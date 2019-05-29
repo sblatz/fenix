@@ -8,6 +8,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.AttributeSet
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -99,6 +100,7 @@ open class HomeActivity : AppCompatActivity() {
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
+        Log.d("Sawyer", "on new intent: " + intent)
         handleCrashIfNecessary(intent)
         handleOpenedFromExternalSourceIfNecessary(intent)
     }
