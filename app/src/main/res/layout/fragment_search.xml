@@ -33,6 +33,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <FrameLayout
+            
             android:id="@+id/toolbar_component_wrapper"
             android:layout_width="0dp"
             android:layout_height="0dp"
