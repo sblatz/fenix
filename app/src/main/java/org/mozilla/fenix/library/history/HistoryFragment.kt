@@ -147,6 +147,7 @@ class HistoryFragment : Fragment(), BackHandler {
             val selectedHistory = (historyComponent.uiView as HistoryUIView).getSelected()
             requireComponents.useCases.tabsUseCases.addTab.let { useCase ->
                 for (selectedItem in selectedHistory) {
+                    requireComponents.analytics.metrics.track(Event.HistoryItemOpened)
                     useCase.invoke(selectedItem.url)
                 }
             }
@@ -162,6 +163,7 @@ class HistoryFragment : Fragment(), BackHandler {
             val selectedHistory = (historyComponent.uiView as HistoryUIView).getSelected()
             requireComponents.useCases.tabsUseCases.addPrivateTab.let { useCase ->
                 for (selectedItem in selectedHistory) {
+                    requireComponents.analytics.metrics.track(Event.HistoryItemOpened)
                     useCase.invoke(selectedItem.url)
                 }
             }
@@ -193,6 +195,7 @@ class HistoryFragment : Fragment(), BackHandler {
             is HistoryAction.Delete.All ->
                 displayDeleteAllDialog()
             is HistoryAction.Delete.One -> lifecycleScope.launch {
+                requireComponents.analytics.metrics.track(Event.HistoryItemRemoved)
                 requireComponents.core
                     .historyStorage
                     .deleteVisit(action.item.url, action.item.visitedAt)
@@ -201,6 +204,7 @@ class HistoryFragment : Fragment(), BackHandler {
             is HistoryAction.Delete.Some -> lifecycleScope.launch {
                 val storage = requireComponents.core.historyStorage
                 for (item in action.items) {
+                    requireComponents.analytics.metrics.track(Event.HistoryItemRemoved)
                     storage.deleteVisit(item.url, item.visitedAt)
                 }
                 reloadData()
