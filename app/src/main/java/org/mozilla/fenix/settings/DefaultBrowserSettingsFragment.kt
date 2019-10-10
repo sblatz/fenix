@@ -4,18 +4,15 @@
 
 package org.mozilla.fenix.settings
 
-import android.content.Intent
 import android.content.SharedPreferences
-import android.os.Build
-import android.os.Build.VERSION.SDK_INT
 import android.os.Bundle
-import android.provider.Settings.ACTION_MANAGE_DEFAULT_APPS_SETTINGS
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.CheckBoxPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import mozilla.components.support.utils.Browsers
+import org.mozilla.fenix.BrowserDirection
+import org.mozilla.fenix.HomeActivity
 import org.mozilla.fenix.R
 import org.mozilla.fenix.ext.components
 import org.mozilla.fenix.ext.getPreferenceKey
@@ -30,7 +27,11 @@ class DefaultBrowserSettingsFragment : PreferenceFragmentCompat() {
         SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key ->
             when (key) {
                 getPreferenceKey(R.string.pref_key_telemetry) -> {
-                    if (sharedPreferences.getBoolean(key, requireContext().settings().isTelemetryEnabled)) {
+                    if (sharedPreferences.getBoolean(
+                            key,
+                            requireContext().settings().isTelemetryEnabled
+                        )
+                    ) {
                         context?.components?.analytics?.metrics?.start()
                     } else {
                         context?.components?.analytics?.metrics?.stop()
@@ -42,11 +43,15 @@ class DefaultBrowserSettingsFragment : PreferenceFragmentCompat() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         context?.let {
-            preferenceManager.sharedPreferences.registerOnSharedPreferenceChangeListener(preferenceChangeListener)
+            preferenceManager.sharedPreferences.registerOnSharedPreferenceChangeListener(
+                preferenceChangeListener
+            )
         }
 
         val makeDefaultBrowserKey = getPreferenceKey(R.string.pref_key_make_default_browser)
         val preferenceMakeDefaultBrowser = findPreference<Preference>(makeDefaultBrowserKey)
+
+
 
         preferenceMakeDefaultBrowser?.onPreferenceClickListener =
             getClickListenerForMakeDefaultBrowser()
@@ -54,7 +59,8 @@ class DefaultBrowserSettingsFragment : PreferenceFragmentCompat() {
 
     override fun onResume() {
         super.onResume()
-        (activity as AppCompatActivity).title = getString(R.string.preferences_set_as_default_browser)
+        (activity as AppCompatActivity).title =
+            getString(R.string.preferences_set_as_default_browser)
         (activity as AppCompatActivity).supportActionBar?.show()
 
         updatePreferences()
@@ -62,7 +68,9 @@ class DefaultBrowserSettingsFragment : PreferenceFragmentCompat() {
 
     override fun onDestroy() {
         context?.let {
-            preferenceManager.sharedPreferences.unregisterOnSharedPreferenceChangeListener(preferenceChangeListener)
+            preferenceManager.sharedPreferences.unregisterOnSharedPreferenceChangeListener(
+                preferenceChangeListener
+            )
         }
         super.onDestroy()
     }
@@ -84,6 +92,19 @@ class DefaultBrowserSettingsFragment : PreferenceFragmentCompat() {
     }
 
     private fun getClickListenerForMakeDefaultBrowser(): Preference.OnPreferenceClickListener {
+        // Send the user to the SUMO article...
+        return Preference.OnPreferenceClickListener {
+            (activity as HomeActivity).openToBrowserAndLoad(
+                searchTermOrURL = SupportUtils.getSumoURLForTopic(
+                    context!!,
+                    SupportUtils.SumoTopic.SET_AS_DEFAULT_BROWSER
+                ),
+                newTab = true,
+                from = BrowserDirection.FromDefaultBrowserSettingsFragment
+            )
+            true
+        }
+        /*
         return if (SDK_INT >= Build.VERSION_CODES.N) {
             Preference.OnPreferenceClickListener {
                 val intent = Intent(
@@ -93,13 +114,20 @@ class DefaultBrowserSettingsFragment : PreferenceFragmentCompat() {
                 true
             }
         } else {
-            defaultClickListener
+            // Send the user to the SUMO article...
+            Preference.OnPreferenceClickListener {
+                (activity as HomeActivity).openToBrowserAndLoad(
+                    searchTermOrURL = SupportUtils.getSumoURLForTopic(
+                        context!!,
+                        SupportUtils.SumoTopic.SET_AS_DEFAULT_BROWSER
+                    ),
+                    newTab = true,
+                    from = BrowserDirection.FromSettings
+                )
+                true
+            }
         }
-    }
 
-    private val defaultClickListener =
-        Preference.OnPreferenceClickListener { preference ->
-            Toast.makeText(context, "${preference.title} Clicked", Toast.LENGTH_SHORT).show()
-            true
-        }
+         */
+    }
 }
