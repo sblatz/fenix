@@ -10,21 +10,16 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
 import android.view.accessibility.AccessibilityManager
 import android.widget.Button
 import android.widget.RadioButton
-import androidx.appcompat.widget.AppCompatImageView
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.transition.TransitionInflater
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.fragment_browser.view.*
 import kotlinx.android.synthetic.main.fragment_browser.*
 import kotlinx.android.synthetic.main.fragment_browser.view.*
-import kotlinx.android.synthetic.main.fragment_home.*
-import kotlinx.android.synthetic.main.tracking_protection_onboarding_popup.view.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import mozilla.components.browser.session.Session
 import mozilla.components.feature.contextmenu.ContextMenuCandidate
@@ -35,6 +30,7 @@ import mozilla.components.feature.tabs.WindowFeature
 import mozilla.components.lib.state.ext.consumeFrom
 import mozilla.components.support.base.feature.BackHandler
 import mozilla.components.support.base.feature.ViewBoundFeatureWrapper
+import org.jetbrains.anko.dimen
 import org.mozilla.fenix.HomeActivity
 import org.mozilla.fenix.R
 import org.mozilla.fenix.components.FenixSnackbar
@@ -125,16 +121,18 @@ class BrowserFragment : BaseBrowserFragment(), BackHandler {
     override fun onStart() {
         super.onStart()
         subscribeToTabCollections()
-        
+
         val toolbarSessionObserver = TrackingProtectionOverlay(
             context = requireContext(),
             settings = requireContext().settings()
         ) {
             browserToolbarView.view
+        }
 
         getSessionById()?.register(toolbarSessionObserver, this, autoPause = true)
 
-        val accessibilityManager = activity?.getSystemService(Context.ACCESSIBILITY_SERVICE) as? AccessibilityManager
+        val accessibilityManager =
+            activity?.getSystemService(Context.ACCESSIBILITY_SERVICE) as? AccessibilityManager
         accessibilityManager?.addTouchExplorationStateChangeListener {
             updateToolbar()
         }
@@ -183,18 +181,6 @@ class BrowserFragment : BaseBrowserFragment(), BackHandler {
                 }
             }
         }
-    }
-
-    private val toolbarSessionObserver = object : Session.Observer {
-        override fun onLoadingStateChanged(session: Session, loading: Boolean) {
-            setToolbarBehavior(loading)
-            if (!loading &&
-                shouldShowTrackingProtectionOnboarding(session)
-            ) {
-                showTrackingProtectionOnboarding()
-            }
-        }
-        getSessionById()?.register(toolbarSessionObserver, this, autoPause = true)
     }
 
     override fun onResume() {

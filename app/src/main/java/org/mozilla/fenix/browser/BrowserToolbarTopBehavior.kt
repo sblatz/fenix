@@ -7,6 +7,7 @@ package org.mozilla.fenix.browser
 import android.animation.ValueAnimator
 import android.content.Context
 import android.util.AttributeSet
+import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.View.SCROLL_AXIS_VERTICAL
@@ -33,7 +34,7 @@ private const val SNAP_ANIMATION_DURATION = 150L
  */
 class BrowserToolbarTopBehavior(
     context: Context?,
-    engineLayout: SwipeRefreshLayout?,
+    private val engineLayout: SwipeRefreshLayout,
     attrs: AttributeSet?
 ) : CoordinatorLayout.Behavior<BrowserToolbar>(context, attrs) {
     // This implementation is heavily based on this blog article:
@@ -93,11 +94,23 @@ class BrowserToolbarTopBehavior(
     ) {
         super.onNestedPreScroll(coordinatorLayout, child, target, dx, dy, consumed, type)
         child.translationY = max(-child.height.toFloat(), min(0f, child.translationY - dy))
+
+        val browserEngine = engineLayout.layoutParams as CoordinatorLayout.LayoutParams
+        Log.d("Sawyer", "Scrolling: ${browserEngine.rightMargin}")
+
+        // engineLayout.height += child.translationY
+        browserEngine.setMargins(0, child.translationY.toInt(), 0, 0)
+
+        // TODO: I need to increase the height here? :\
+        browserEngine.height += child.translationY.toInt()
+        engineLayout.translationY = child.translationY
     }
 
     override fun layoutDependsOn(parent: CoordinatorLayout, child: BrowserToolbar, dependency: View): Boolean {
         if (dependency is Snackbar.SnackbarLayout) {
             positionSnackbar(dependency)
+        } else {
+            Log.d("Sawyer", "depenedency: $dependency")
         }
 
         return super.layoutDependsOn(parent, child, dependency)
@@ -113,7 +126,7 @@ class BrowserToolbarTopBehavior(
         val params = view.layoutParams as CoordinatorLayout.LayoutParams
 
         // Position the snackbar below the toolbar so that it doesn't overlay the toolbar.
-        params.anchorId = R.id.quick_action_sheet
+        params.anchorId = R.id.toolbar
         params.anchorGravity = Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL
         params.gravity = Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL
 
