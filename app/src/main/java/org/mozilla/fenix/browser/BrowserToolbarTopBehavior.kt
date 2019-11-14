@@ -14,6 +14,7 @@ import android.view.animation.DecelerateInterpolator
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.ViewCompat.TYPE_NON_TOUCH
 import androidx.core.view.ViewCompat.TYPE_TOUCH
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.snackbar.Snackbar
 import mozilla.components.browser.toolbar.BrowserToolbar
 import org.mozilla.fenix.R
@@ -32,6 +33,7 @@ private const val SNAP_ANIMATION_DURATION = 150L
  */
 class BrowserToolbarTopBehavior(
     context: Context?,
+    engineLayout: SwipeRefreshLayout?,
     attrs: AttributeSet?
 ) : CoordinatorLayout.Behavior<BrowserToolbar>(context, attrs) {
     // This implementation is heavily based on this blog article:

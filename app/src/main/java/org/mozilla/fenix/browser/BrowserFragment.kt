@@ -150,6 +150,7 @@ class BrowserFragment : BaseBrowserFragment(), BackHandler {
             browserEngine.bottomMargin = requireContext().dimen(R.dimen.browser_toolbar_height)
             Gravity.BOTTOM
         } else {
+            browserEngine.topMargin = requireContext().dimen(R.dimen.browser_toolbar_height)
             browserEngine.bottomMargin = 0
             Gravity.TOP
         }
@@ -172,10 +173,10 @@ class BrowserFragment : BaseBrowserFragment(), BackHandler {
                 }
                 shouldUseBottomToolbar -> {
                     // Do not use a dynamic behavior for the bottom toolbar
-                    null
+                    BrowserToolbarBottomBehavior(context, null)
                 }
                 !shouldUseBottomToolbar -> {
-                    BrowserToolbarTopBehavior(context, null)
+                    BrowserToolbarTopBehavior(context, swipeRefresh, null)
                 }
                 else -> {
                     null
