@@ -46,10 +46,6 @@ object PrivateShortcutCreateManager {
                 action = Intent.ACTION_VIEW
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 putExtra(HomeActivity.PRIVATE_BROWSING_MODE, true)
-                putExtra(
-                    HomeActivity.OPEN_TO_SEARCH,
-                    StartSearchIntentProcessor.PRIVATE_BROWSING_PINNED_SHORTCUT
-                )
             })
             .build()
         val homeScreenIntent = Intent(Intent.ACTION_MAIN)
