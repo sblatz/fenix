@@ -81,7 +81,7 @@ button {
   text-aligned:center;
   vertical-aligned:center;
   background-image: none;
-  margin-bottom: 20px;
+  margin-bottom: 25%;
 }
 
 button.inProgress {
