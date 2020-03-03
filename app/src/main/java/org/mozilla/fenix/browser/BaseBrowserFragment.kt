@@ -25,6 +25,7 @@ import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import mozilla.appservices.places.BookmarkRoot
@@ -200,7 +201,8 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Session
                 bookmarkTapped = { lifecycleScope.launch { bookmarkTapped(it) } },
                 scope = lifecycleScope,
                 tabCollectionStorage = requireComponents.core.tabCollectionStorage,
-                topSiteStorage = requireComponents.core.topSiteStorage
+                topSiteStorage = requireComponents.core.topSiteStorage,
+                navigateToSearchWithAnimation = ::navigateToSearchWithAnimation
             )
 
             _browserInteractor = BrowserInteractor(
@@ -475,6 +477,19 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Session
                     view = view
                 )
             }
+        }
+    }
+
+    private fun navigateToSearchWithAnimation() {
+        browserAnimator.beginFadeOut()
+
+        lifecycleScope.launch {
+            // Delay for a short amount of time so the fade out animation plays a little bit
+            delay(ANIMATION_DELAY)
+            val directions = BrowserFragmentDirections.actionBrowserFragmentToSearchFragment(
+                getSessionById()?.id
+            )
+            nav(R.id.browserFragment, directions)
         }
     }
 
@@ -766,6 +781,7 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Session
     }
 
     companion object {
+        private const val ANIMATION_DELAY = 100L
         private const val KEY_CUSTOM_TAB_SESSION_ID = "custom_tab_session_id"
         private const val REQUEST_CODE_DOWNLOAD_PERMISSIONS = 1
         private const val REQUEST_CODE_PROMPT_PERMISSIONS = 2

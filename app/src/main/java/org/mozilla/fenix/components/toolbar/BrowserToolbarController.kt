@@ -71,7 +71,8 @@ class DefaultBrowserToolbarController(
     private val bookmarkTapped: (Session) -> Unit,
     private val scope: CoroutineScope,
     private val tabCollectionStorage: TabCollectionStorage,
-    private val topSiteStorage: TopSiteStorage
+    private val topSiteStorage: TopSiteStorage,
+    private val navigateToSearchWithAnimation: () -> Unit
 ) : BrowserToolbarController {
 
     private val currentSession
@@ -110,13 +111,7 @@ class DefaultBrowserToolbarController(
             Event.SearchBarTapped(Event.SearchBarTapped.Source.BROWSER)
         )
 
-        browserAnimator.captureEngineViewAndDrawStatically {
-            val directions = BrowserFragmentDirections.actionBrowserFragmentToSearchFragment(
-                currentSession?.id
-            )
-
-            navController.nav(R.id.browserFragment, directions)
-        }
+        navigateToSearchWithAnimation()
     }
 
     override fun handleTabCounterClick() {
