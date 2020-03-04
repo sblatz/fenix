@@ -18,6 +18,7 @@ import android.view.ViewStub
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.transition.TransitionInflater
@@ -112,9 +113,11 @@ class SearchFragment : Fragment(), UserInteractionHandler {
         }
 
         val searchController = DefaultSearchController(
-            activity as HomeActivity,
-            searchStore,
-            findNavController()
+            context = activity as HomeActivity,
+            store = searchStore,
+            navController = findNavController(),
+            lifecycleScope = viewLifecycleOwner.lifecycleScope,
+            clearToolbarFocus = ::clearToolbarFocus
         )
 
         searchInteractor = SearchInteractor(
@@ -137,6 +140,10 @@ class SearchFragment : Fragment(), UserInteractionHandler {
 
         startPostponedEnterTransition()
         return view
+    }
+
+    private fun clearToolbarFocus() {
+        toolbarView.view.clearFocus()
     }
 
     @ExperimentalCoroutinesApi
@@ -293,6 +300,8 @@ class SearchFragment : Fragment(), UserInteractionHandler {
             }
             else -> awesomeBarView.isKeyboardDismissedProgrammatically
         }
+
+        // Note: Actual navigation happens in `handleEditingCancelled` in SearchController
     }
 
     private fun updateSearchWithLabel(searchState: SearchFragmentState) {

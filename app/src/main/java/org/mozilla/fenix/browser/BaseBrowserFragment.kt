@@ -25,7 +25,6 @@ import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import mozilla.appservices.places.BookmarkRoot
@@ -481,11 +480,11 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Session
     }
 
     private fun navigateToSearchWithAnimation() {
-        browserAnimator.beginFadeOut()
+        //browserAnimator.beginFadeOut()
 
         lifecycleScope.launch {
             // Delay for a short amount of time so the fade out animation plays a little bit
-            delay(ANIMATION_DELAY)
+            //delay(ANIMATION_DELAY)
             val directions = BrowserFragmentDirections.actionBrowserFragmentToSearchFragment(
                 getSessionById()?.id
             )
@@ -781,7 +780,7 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Session
     }
 
     companion object {
-        private const val ANIMATION_DELAY = 100L
+        private const val ANIMATION_DELAY = 150L
         private const val KEY_CUSTOM_TAB_SESSION_ID = "custom_tab_session_id"
         private const val REQUEST_CODE_DOWNLOAD_PERMISSIONS = 1
         private const val REQUEST_CODE_PROMPT_PERMISSIONS = 2

@@ -6,7 +6,10 @@
 package org.mozilla.fenix.search
 
 import android.content.Context
+import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.navigation.NavController
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import mozilla.components.browser.search.SearchEngine
 import mozilla.components.browser.session.Session
 import mozilla.components.support.ktx.kotlin.isUrl
@@ -41,7 +44,9 @@ interface SearchController {
 class DefaultSearchController(
     private val context: Context,
     private val store: SearchFragmentStore,
-    private val navController: NavController
+    private val navController: NavController,
+    private val lifecycleScope: LifecycleCoroutineScope,
+    private val clearToolbarFocus: () -> Unit
 ) : SearchController {
 
     override fun handleUrlCommitted(url: String) {
@@ -75,7 +80,13 @@ class DefaultSearchController(
     }
 
     override fun handleEditingCancelled() {
-        navController.navigateUp()
+        lifecycleScope.launch {
+            clearToolbarFocus()
+            // Delay a short amount so the keyboard begins animating away. This makes exit animation
+            // much smoother instead of having two separate parts (keyboard hides THEN animation)
+            delay(KEYBOARD_ANIMATION_DELAY)
+            navController.popBackStack()
+        }
     }
 
     override fun handleTextChanged(text: String) {
@@ -163,5 +174,9 @@ class DefaultSearchController(
         if (session != null) {
             handleExistingSessionSelected(session)
         }
+    }
+
+    companion object {
+        private const val KEYBOARD_ANIMATION_DELAY = 5L
     }
 }
