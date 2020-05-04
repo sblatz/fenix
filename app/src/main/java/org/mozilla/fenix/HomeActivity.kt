@@ -30,7 +30,10 @@ import mozilla.components.browser.search.SearchEngine
 import mozilla.components.browser.session.Session
 import mozilla.components.browser.session.SessionManager
 import mozilla.components.browser.state.state.WebExtensionState
+import mozilla.components.browser.tabstray.BrowserTabsTray
+import mozilla.components.browser.tabstray.TabsAdapter
 import mozilla.components.concept.engine.EngineView
+import mozilla.components.concept.tabstray.TabsTray
 import mozilla.components.feature.contextmenu.ext.DefaultSelectionActionDelegate
 import mozilla.components.service.fxa.sync.SyncReason
 import mozilla.components.support.base.feature.UserInteractionHandler
@@ -70,14 +73,11 @@ import org.mozilla.fenix.settings.SettingsFragmentDirections
 import org.mozilla.fenix.settings.TrackingProtectionFragmentDirections
 import org.mozilla.fenix.settings.about.AboutFragmentDirections
 import org.mozilla.fenix.settings.logins.SavedLoginsFragmentDirections
+import org.mozilla.fenix.tabtray.TabTrayFragmentDirections
 import org.mozilla.fenix.theme.DefaultThemeManager
 import org.mozilla.fenix.theme.ThemeManager
 import org.mozilla.fenix.utils.BrowsersCache
 import org.mozilla.fenix.utils.RunWhenReadyQueue
-import mozilla.components.concept.tabstray.TabsTray
-import mozilla.components.browser.tabstray.TabsAdapter
-import mozilla.components.browser.tabstray.BrowserTabsTray
-import org.mozilla.fenix.tabtray.TabTrayFragmentDirections
 
 /**
  * The main activity of the application. The application is primarily a single Activity (this one)
@@ -344,7 +344,10 @@ open class HomeActivity : LocaleAwareAppCompatActivity() {
         BrowserDirection.FromSearch ->
             SearchFragmentDirections.actionGlobalBrowser(customTabSessionId)
         BrowserDirection.FromTabTray ->
-            TabTrayFragmentDirections.actionGlobalBrowser(customTabSessionId)
+            TabTrayFragmentDirections.actionTabsTrayFragmentToBrowserFragment(
+                activeSessionId = customTabSessionId,
+                shouldAnimate = true
+            )
         BrowserDirection.FromSettings ->
             SettingsFragmentDirections.actionGlobalBrowser(customTabSessionId)
         BrowserDirection.FromBookmarks ->

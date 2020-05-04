@@ -9,6 +9,7 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.animation.DecelerateInterpolator
 import androidx.core.animation.doOnEnd
@@ -57,7 +58,7 @@ class BrowserAnimator(
         doOnEnd {
             unwrappedEngineView?.asView()?.visibility = View.VISIBLE
             unwrappedSwipeRefresh?.background = null
-            arguments.putBoolean(SHOULD_ANIMATE_FLAG, false)
+            //arguments.putBoolean(SHOULD_ANIMATE_FLAG, false)
         }
 
         interpolator = DecelerateInterpolator()
@@ -72,7 +73,7 @@ class BrowserAnimator(
         doOnEnd {
             unwrappedEngineView?.asView()?.visibility = View.VISIBLE
             unwrappedSwipeRefresh?.background = null
-            arguments.putBoolean(SHOULD_ANIMATE_FLAG, false)
+            //arguments.putBoolean(SHOULD_ANIMATE_FLAG, false)
         }
 
         interpolator = DecelerateInterpolator()
@@ -85,6 +86,7 @@ class BrowserAnimator(
      */
     fun beginAnimateInIfNecessary() {
         val shouldAnimate = arguments.getBoolean(SHOULD_ANIMATE_FLAG, false)
+        Log.d("Sawyer", "ShouldAnimate: $shouldAnimate")
         if (shouldAnimate) {
             viewLifeCycleScope?.launch(Dispatchers.Main) {
                 delay(ANIMATION_DELAY)

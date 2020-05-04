@@ -53,7 +53,13 @@
 
     <fragment
         android:id="@+id/tabTrayFragment"
+        app:enterAnim="@anim/zoom_out_fade"
         android:name="org.mozilla.fenix.tabtray.TabTrayFragment">
+        <action
+            android:id="@+id/action_tabsTrayFragment_to_browserFragment"
+            app:destination="@id/browserFragment"
+            app:exitAnim="@anim/zoom_in_fade"
+            app:popEnterAnim="@anim/zoom_out_fade" />
         <action
             android:id="@+id/action_tabTrayFragment_to_createCollectionFragment"
             app:destination="@+id/collectionCreationFragment"
@@ -177,6 +183,8 @@
             app:destination="@id/trackingProtectionPanelDialogFragment" />
         <action
             android:id="@+id/action_browserFragment_to_tabsTrayFragment"
+            app:enterAnim="@anim/zoom_out_fade"
+            app:exitAnim="@anim/zoom_in_fade"
             app:destination="@+id/tabTrayFragment" />
     </fragment>
 

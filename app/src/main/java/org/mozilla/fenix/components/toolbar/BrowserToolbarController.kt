@@ -6,6 +6,7 @@ package org.mozilla.fenix.components.toolbar
 
 import android.app.Activity
 import android.content.Intent
+import android.util.Log
 import androidx.annotation.VisibleForTesting
 import androidx.navigation.NavController
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -313,18 +314,17 @@ class DefaultBrowserToolbarController(
     }
 
     private fun animateTabAndNavigateHome() {
-        if (activity.settings().useNewTabTray) {
-            val directions = BrowserFragmentDirections.actionBrowserFragmentToTabsTrayFragment()
-            navController.navigate(directions)
-            return
-        }
-
         scope.launch {
             browserAnimator.beginAnimateOut()
             // Delay for a short amount of time so the browser has time to start animating out
             // before we transition the fragment. This makes the animation feel smoother
             delay(ANIMATION_DELAY)
-            if (!navController.popBackStack(R.id.homeFragment, false)) {
+
+            if (activity.settings().useNewTabTray) {
+                Log.d("Sawyer", "animateTabAndNavHome, new tab tray")
+                val directions = BrowserFragmentDirections.actionBrowserFragmentToTabsTrayFragment()
+                navController.navigate(directions)
+            } else if (!navController.popBackStack(R.id.homeFragment, false)) {
                 navController.nav(
                     R.id.browserFragment,
                     BrowserFragmentDirections.actionGlobalHome()
