@@ -327,11 +327,6 @@ class Settings private constructor(
         default = false
     )
 
-    var shouldUseTrackingProtection by booleanPreference(
-        appContext.getPreferenceKey(R.string.pref_key_tracking_protection),
-        default = true
-    )
-
     fun isDefaultBrowser(): Boolean {
         val browsers = BrowsersCache.all(appContext)
         return browsers.isDefaultBrowser
@@ -342,10 +337,17 @@ class Settings private constructor(
         default = false
     )
 
-    val useStandardTrackingProtection by booleanPreference(
-        appContext.getPreferenceKey(R.string.pref_key_tracking_protection_standard_option),
-        true
+    var shouldUseTrackingProtection by booleanPreference(
+        appContext.getPreferenceKey(R.string.pref_key_tracking_protection),
+        default = true
     )
+
+    val trackingProtectionPolicy: String =
+         when {
+            Settings(appContext).useStrictTrackingProtection -> "Strict"
+            useCustomTrackingProtection -> "Custom"
+            else -> "Standard"
+        }
 
     val useStrictTrackingProtection by booleanPreference(
         appContext.getPreferenceKey(R.string.pref_key_tracking_protection_strict_default),
