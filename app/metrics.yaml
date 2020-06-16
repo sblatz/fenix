@@ -1741,6 +1741,31 @@ private_browsing_mode:
       - fenix-core@mozilla.com
     expires: "2020-09-01"
 
+contextual_hint:
+  tracking_protection_displayed:
+    type: event
+    description: |
+      The tracking protection contextual hint was displayed.
+    bugs:
+      - https://github.com/mozilla-mobile/fenix/issues/9625
+    data_reviews:
+      - https://github.com/mozilla-mobile/fenix/pull/TODO
+    notification_emails:
+      - fenix-core@mozilla.com
+    expires: "2020-09-01"
+  tracking_protection_dismissed:
+    type: event
+    description: |
+      The tracking protection contextual hint was dismissed by pressing the
+      close button
+    bugs:
+      - https://github.com/mozilla-mobile/fenix/issues/9625
+    data_reviews:
+      - https://github.com/mozilla-mobile/fenix/pull/TODO
+    notification_emails:
+      - fenix-core@mozilla.com
+    expires: "2020-09-01"
+
 tracking_protection:
   exception_added:
     type: event

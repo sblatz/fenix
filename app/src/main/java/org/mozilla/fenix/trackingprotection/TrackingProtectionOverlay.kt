@@ -8,8 +8,10 @@ import android.app.Dialog
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.widget.ImageView
 import androidx.core.view.isGone
@@ -40,13 +42,21 @@ class TrackingProtectionOverlay(
 
     private fun shouldShowTrackingProtectionOnboarding(session: Session) =
         settings.shouldShowTrackingProtectionOnboarding &&
-                session.trackerBlockingEnabled &&
-                session.trackersBlocked.isNotEmpty()
+            session.trackerBlockingEnabled &&
+            session.trackersBlocked.isNotEmpty()
 
     @Suppress("MagicNumber", "InflateParams")
     private fun showTrackingProtectionOnboarding() {
         if (!getToolbar().hasWindowFocus()) return
-        val trackingOnboardingDialog = Dialog(context)
+
+        val trackingOnboardingDialog = object : Dialog(context) {
+            override fun onTouchEvent(event: MotionEvent): Boolean {
+                 Log.d("Sawyer", "onTouchEvent")
+                    return super.onTouchEvent(event)
+                }
+            }
+
+
         val layout = LayoutInflater.from(context)
             .inflate(R.layout.tracking_protection_onboarding_popup, null)
         val isBottomToolbar = Settings.getInstance(context).shouldUseBottomToolbar
